@@ -1,0 +1,26 @@
+* {
+    /*-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+  overflow-y: scroll; /* has to be scroll, not auto */
+/*  -webkit-overflow-scrolling: touch;*/
+
+}
+
+
+.button {
+    background-color: #4CAF50; /* Green */
+    border: 2px solid blue;
+    border-radius: 5px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+button:active {
+    border: 2px solid red;
+    }
+.buttonDiv{
+display: block;
+
+}
