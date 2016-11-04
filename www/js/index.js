@@ -28,11 +28,13 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         console.log("Device Ready");
+        console.log(navigator.camera);
         document.getElementById('device').addEventListener("click", this.deviceClick, false);
         document.getElementById('alert').addEventListener("click", this.alertClick, false);
         document.getElementById('confirm').addEventListener("click", this.confirmClick, false);
         document.getElementById('prompt').addEventListener("click", this.promptClick, false);
         document.getElementById('beep').addEventListener("click", this.beepClick, false);
+        document.getElementById('camera').addEventListener("click", this.cameraClick, false);
 
     },
     deviceClick: function() {
@@ -58,7 +60,10 @@ var app = {
         navigator.notification.alert(
             'This is alert!', // message
             function() {
-                document.getElementById('one').innerHTML = "Alert cordova-plugin-dialogs";
+                nativetransitions.curl(1, "down", function() {
+                    document.getElementById('one').innerHTML = "Alert cordova-plugin-dialogs";
+                });
+
             }, // callback
             'Alert', // title
             'Done' // buttonName
@@ -109,20 +114,39 @@ var app = {
             ['Ok', 'Exit'], // buttonLabels
             'Jane Doe' // defaultText
         );
-
-
     },
+
     beepClick: function() {
-            console.log("beepClick");
-            document.getElementById('one').innerHTML = "";
-            navigator.notification.beep(1);
-            document.getElementById('one').innerHTML = "beep";
-        }
-        // navigator.notification.alert
-        // navigator.notification.confirm
-        // navigator.notification.prompt
-        // navigator.notification.beep
-        // Update DOM on a Received Event
+        console.log("beepClick");
+        document.getElementById('one').innerHTML = "";
+        navigator.notification.beep(1);
+        document.getElementById('one').innerHTML = "beep";
+    },
+
+
+    cameraClick: function() {
+        console.log("cameraClick");
+        document.getElementById('one').innerHTML = "";
+        navigator.camera.getPicture(
+            function(imageURI) {
+                var largeImage = document.getElementById('largeImage');
+                largeImage.style.display = 'block';
+                largeImage.src = "data:image/jpeg;base64," + imageURI; //"data:image/jpeg;base64,"
+                console.log(imageURI);
+                // console.log(largeImage.src);
+            },
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }, {
+                quality: 50,
+                destinationType: navigator.camera.DestinationType.DATA_URL,
+                sourceType: navigator.camera.PictureSourceType.CAMERA,
+                saveToPhotoAlbum: true
+            });
+        document.getElementById('one').innerHTML = "Camera click";
+
+    }
+
 };
 
 app.initialize();
