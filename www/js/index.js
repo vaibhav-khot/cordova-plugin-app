@@ -28,13 +28,28 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         console.log("Device Ready");
+        console.log("this");
+        console.log(this);
+        console.log("navigator.camera");
         console.log(navigator.camera);
+        console.log("cordova");
+        console.log(cordova);
+        console.log("cordova.file");
+        console.log(cordova.file);
+        console.log("cordova.file.externalRootDirectory");
+        console.log(cordova.file.externalRootDirectory);
+        console.log("window");
+        console.log(window);
         document.getElementById('device').addEventListener("click", this.deviceClick, false);
         document.getElementById('alert').addEventListener("click", this.alertClick, false);
         document.getElementById('confirm').addEventListener("click", this.confirmClick, false);
         document.getElementById('prompt').addEventListener("click", this.promptClick, false);
         document.getElementById('beep').addEventListener("click", this.beepClick, false);
         document.getElementById('camera').addEventListener("click", this.cameraClick, false);
+        document.getElementById("createFile").addEventListener("click", this.createFile);
+        document.getElementById("writeFile").addEventListener("click", this.writeFile);
+        document.getElementById("readFile").addEventListener("click", this.readFile);
+        document.getElementById("removeFile").addEventListener("click", this.removeFile);
 
     },
     deviceClick: function() {
@@ -145,7 +160,61 @@ var app = {
             });
         document.getElementById('one').innerHTML = "Camera click";
 
+    },
+
+    createFile: function() {
+        // var type = window.TEMPORARY;
+        // var size = 5 * 1024 * 1024;
+        window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory + "example.txt", onResolveSuccess, fail);
+
+        function onResolveSuccess(fileEntry) {
+            console.log(fileEntry.name);
+        }
+
+        function fail(evt) {
+            console.log(evt.target.error.code);
+        }
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, fail);
+
+        function onFileSystemSuccess(fileSystem) {
+            console.log(fileSystem.name);
+        }
+
+        // window.requestFileSystem(type, size, successCallback, errorCallback)
+        //
+        // function successCallback(fs) {
+        //     console.log("fs");
+        //     console.log(fs);
+        //     console.log("fs.root");
+        //     console.log(fs.root);
+        //     console.log(fs.root.fullPath);
+        //
+        //     fs.root.getFile('log.txt', {
+        //         create: true,
+        //         exclusive: true
+        //     }, function(fileEntry) {
+        //         console.log('File creation successfull!');
+        //         console.log("fileEntry");
+        //         console.log(fileEntry);
+        //     }, errorCallback);
+        // }
+        //
+        // function errorCallback(error) {
+        //     console.log("ERROR: " + error.code);
+        // }
+    },
+    writeFile: function() {
+
+    },
+    readFile: function() {
+
+    },
+    removeFile: function() {
+
     }
+
+
+
 
 };
 
