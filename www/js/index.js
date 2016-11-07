@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -40,6 +41,8 @@ var app = {
         console.log(cordova.file.externalRootDirectory);
         console.log("window");
         console.log(window);
+        console.log("cordova.file.externalDataDirectory");
+        console.log(cordova.file.externalDataDirectory);
         document.getElementById('device').addEventListener("click", this.deviceClick, false);
         document.getElementById('alert').addEventListener("click", this.alertClick, false);
         document.getElementById('confirm').addEventListener("click", this.confirmClick, false);
@@ -50,6 +53,8 @@ var app = {
         document.getElementById("writeFile").addEventListener("click", this.writeFile);
         document.getElementById("readFile").addEventListener("click", this.readFile);
         document.getElementById("removeFile").addEventListener("click", this.removeFile);
+        document.getElementById("removeFile").addEventListener("click", this.removeFile);
+
 
     },
     deviceClick: function() {
@@ -142,16 +147,31 @@ var app = {
     cameraClick: function() {
         console.log("cameraClick");
         document.getElementById('one').innerHTML = "";
-        navigator.camera.getPicture(
-            function(imageURI) {
+
+        navigator.camera.getPicture(function(imageURI) {
                 var largeImage = document.getElementById('largeImage');
                 largeImage.style.display = 'block';
-                largeImage.src = "data:image/jpeg;base64," + imageURI; //"data:image/jpeg;base64,"
+                largeImage.src = "content:image/jpeg;base64," + imageURI; //"data:image/jpeg;base64,"
                 console.log(imageURI);
                 // console.log(largeImage.src);
+                // window.resolveLocalFileSystemURL(imageURI, function success(fileEntry) {
+                //
+                //         // Do something with the FileEntry object, like write to it, upload it, etc.
+                //         // writeFile(fileEntry, imgUri);
+                //         console.log("got file: " + fileEntry.nativeURL);
+                //         console.log(fileEntry);
+                //         document.getElementById("cameraOptions").innerHTML = '<button type="button" class="button" id="upload" onclick="uploadImage(' + fileEntry.nativeURL + ')">upload</button> <button type = "button" class = "button" id = "New" >New</button><button type = "button" class = "button" id = " Delete">Delete</button>';
+                //         // displayFileData(fileEntry.nativeURL, "Native URL");
+                //
+                //     },
+                //     function() {
+                //         // If don't get the FileEntry (which may happen when testing
+                //         // on some emulators), copy to a new FileEntry.
+                //         // createNewFileEntry(imgUri);
+                //     });
             },
             function onFail(message) {
-                alert('Failed because: ' + message);
+                console.log('Failed because: ' + message);
             }, {
                 quality: 50,
                 destinationType: navigator.camera.DestinationType.DATA_URL,
@@ -211,8 +231,37 @@ var app = {
     },
     removeFile: function() {
 
-    }
+    },
+    uploadImage: function(fe) {
 
+        var win = function(r) {
+            console.log("Code = " + r.responseCode);
+            console.log("Response = " + r.response);
+            console.log("Sent = " + r.bytesSent);
+        }
+
+        var fail = function(error) {
+            alert("An error has occurred: Code = " + error.code);
+            console.log("upload error source " + error.source);
+            console.log("upload error target " + error.target);
+        }
+
+        var options = new FileUploadOptions();
+        options.fileKey = "file";
+        options.fileName = fe.substr(fileURL.lastIndexOf('/') + 1);
+        options.mimeType = "text/plain";
+
+        var params = {};
+        params.value1 = "test";
+        params.value2 = "param";
+
+        options.params = params;
+
+        var ft = new FileTransfer();
+        ft.upload(fe, encodeURI("http://localhost:8081/"), win, fail, options);
+
+
+    }
 
 
 
